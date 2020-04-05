@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -30,5 +31,19 @@ public class EmployeeJpaRepository {
     @Transactional
     public void delete(Employee employee) {
         entityManager.remove(employee);
+    }
+
+    public List<Employee> findByFirstName(String firstName) {
+        Query query = entityManager.createQuery("from Employee e where e.firstName = :firstName");
+        query.setParameter("firstName", firstName);
+
+        return query.getResultList();
+    }
+
+    public List<Employee> findByNativeQuery(String firstName) {
+        System.out.println("firstName" + firstName);
+        Query query = entityManager.createNativeQuery("select * from employee", Employee.class);
+
+        return query.getResultList();
     }
 }
